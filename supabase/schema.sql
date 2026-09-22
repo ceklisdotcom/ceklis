@@ -158,3 +158,62 @@ CREATE POLICY "Authenticated users can delete paud_students"
     FOR DELETE
     TO authenticated
     USING (true);
+
+-- 4. Tabel Pencatatan Kesehatan & Penimbangan Posyandu (KMS & DDTK)
+CREATE TABLE IF NOT EXISTS public.posyandu_health_records (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id VARCHAR(100) NOT NULL,
+    nama_anak VARCHAR(150) NOT NULL,
+    nisn VARCHAR(10),
+    nik VARCHAR(16),
+    nama_sekolah VARCHAR(150),
+    nama_posyandu VARCHAR(150) NOT NULL,
+    kelurahan VARCHAR(100) NOT NULL,
+    kecamatan VARCHAR(100) NOT NULL,
+    tanggal_periksa DATE NOT NULL,
+    usia_bulan INT NOT NULL,
+    berat_badan NUMERIC(5,2) NOT NULL, -- kg
+    tinggi_badan NUMERIC(5,2) NOT NULL, -- cm
+    lingkar_kepala NUMERIC(5,2) NOT NULL, -- cm
+    status_gizi VARCHAR(50) NOT NULL, -- 'Normal', 'Stunting', 'Wasting', 'Gizi Kurang', 'Risiko Gizi Lebih'
+    status_ddtk VARCHAR(50) NOT NULL, -- 'Sesuai (Normal)', 'Meragukan', 'Penyimpangan'
+    catatan_ddtk TEXT,
+    kader_pemeriksa VARCHAR(150) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- Index pencarian rekam medis Posyandu
+CREATE INDEX IF NOT EXISTS idx_posyandu_records_student_id ON public.posyandu_health_records (student_id);
+CREATE INDEX IF NOT EXISTS idx_posyandu_records_kelurahan ON public.posyandu_health_records (kelurahan);
+CREATE INDEX IF NOT EXISTS idx_posyandu_records_status_gizi ON public.posyandu_health_records (status_gizi);
+
+-- Aktifkan RLS untuk posyandu_health_records
+ALTER TABLE public.posyandu_health_records ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Authenticated users can read posyandu_health_records" ON public.posyandu_health_records;
+CREATE POLICY "Authenticated users can read posyandu_health_records"
+    ON public.posyandu_health_records
+    FOR SELECT
+    TO authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Authenticated users can insert posyandu_health_records" ON public.posyandu_health_records;
+CREATE POLICY "Authenticated users can insert posyandu_health_records"
+    ON public.posyandu_health_records
+    FOR INSERT
+    TO authenticated
+    WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Authenticated users can update posyandu_health_records" ON public.posyandu_health_records;
+CREATE POLICY "Authenticated users can update posyandu_health_records"
+    ON public.posyandu_health_records
+    FOR UPDATE
+    TO authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Authenticated users can delete posyandu_health_records" ON public.posyandu_health_records;
+CREATE POLICY "Authenticated users can delete posyandu_health_records"
+    ON public.posyandu_health_records
+    FOR DELETE
+    TO authenticated
+    USING (true);

@@ -188,31 +188,61 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Featured App Modules Banner */}
-        <div className="p-4 sm:p-5 rounded-2xl border bg-card/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-start sm:items-center gap-3.5">
-            <div className="size-11 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-              <GraduationCap className="size-6" />
+        {/* Featured App Modules Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Module 1: PAUD School */}
+          <div className="p-4 sm:p-5 rounded-2xl border bg-card/80 shadow-xs flex flex-col justify-between gap-4 hover:border-indigo-500/40 transition-colors">
+            <div className="flex items-start gap-3.5">
+              <div className="size-11 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                <GraduationCap className="size-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-base text-foreground flex items-center gap-2">
+                  <span>Modul Sekolah PAUD & Siswa</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold">
+                    Dapodik
+                  </span>
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Kelola peserta didik PAUD, rombel (Kelompok A/B), NIK, NISN, status DDTK & PMT-AS dengan Switch Role (Kepala Sekolah, Operator, Guru).
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-base text-foreground flex items-center gap-2">
-                <span>Modul Sekolah PAUD & Siswa (Dapodik)</span>
-                <span className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold">
-                  Baru
-                </span>
-              </h3>
-              <p className="text-xs text-muted-foreground">
-                Kelola data peserta didik PAUD, rombel (Kelompok A/B), NIK, NISN, status DDTK & PMT-AS dengan fitur Switch Role (Kepala Sekolah, Operator, Guru).
-              </p>
-            </div>
+
+            <Link href="/dashboard/school/students" className="mt-1">
+              <Button size="sm" className="gap-2 shadow-xs w-full justify-between">
+                <span>Buka Data Siswa PAUD</span>
+                <ArrowRight className="size-4" />
+              </Button>
+            </Link>
           </div>
 
-          <Link href="/dashboard/school/students" className="shrink-0">
-            <Button className="gap-2 shadow-xs w-full sm:w-auto">
-              <span>Buka Data Siswa PAUD</span>
-              <ArrowRight className="size-4" />
-            </Button>
-          </Link>
+          {/* Module 2: Posyandu Health Records */}
+          <div className="p-4 sm:p-5 rounded-2xl border bg-card/80 shadow-xs flex flex-col justify-between gap-4 hover:border-rose-500/40 transition-colors">
+            <div className="flex items-start gap-3.5">
+              <div className="size-11 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                <HeartHandshake className="size-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-base text-foreground flex items-center gap-2">
+                  <span>Layanan Posyandu & KMS</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-semibold">
+                    Kesehatan
+                  </span>
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Pencatatan antropometri penimbangan balita/siswa PAUD di kelurahan, deteksi stunting dini, dan riwayat KMS terpadu.
+                </p>
+              </div>
+            </div>
+
+            <Link href="/dashboard/posyandu/health-records" className="mt-1">
+              <Button size="sm" variant="outline" className="gap-2 shadow-xs w-full justify-between hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300">
+                <span>Buka Penimbangan Posyandu</span>
+                <ArrowRight className="size-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* 3-Column Info Cards */}

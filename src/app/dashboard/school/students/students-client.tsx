@@ -5,6 +5,8 @@ import Link from "next/link"
 import { useActionState, useMemo, useState } from "react"
 import { createPaudStudentAction } from "@/app/dashboard/school/actions"
 import { type PaudStudent } from "@/app/dashboard/school/types"
+import { INITIAL_HEALTH_RECORDS } from "@/app/dashboard/posyandu/types"
+import { StudentHealthHistory } from "@/components/student-health-history"
 import { type WilayahTegalItem } from "@/lib/constants/wilayah"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -20,7 +22,9 @@ import {
   ChevronDown,
   Filter,
   GraduationCap,
+  HeartHandshake,
   HeartPulse,
+  History,
   IdCard,
   Layers,
   Loader2,
@@ -54,6 +58,10 @@ export function StudentsClient({
   const [students, setStudents] = useState<PaudStudent[]>(initialStudents)
   const [activeRole, setActiveRole] = useState<SchoolRole>("Kepala Sekolah")
   const [showAddForm, setShowAddForm] = useState<boolean>(false)
+
+  // Health History Modal
+  const [selectedStudentForHistory, setSelectedStudentForHistory] = useState<PaudStudent | null>(null)
+  const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false)
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState<string>("")
@@ -166,6 +174,14 @@ export function StudentsClient({
 
   return (
     <div className="space-y-6">
+      {/* Shared Health History Modal */}
+      <StudentHealthHistory
+        student={selectedStudentForHistory}
+        healthRecords={INITIAL_HEALTH_RECORDS}
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+      />
+
       {/* Top Header with Breadcrumbs & Role Switcher */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-card border shadow-xs">
         <div className="space-y-1">
@@ -871,14 +887,16 @@ export function StudentsClient({
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="xs"
                             onClick={() => {
-                              alert(`Detail Siswa: ${std.nama_lengkap}\nNISN: ${std.nisn}\nCatatan: ${std.catatan_kesehatan || "Tidak ada"}`)
+                              setSelectedStudentForHistory(std)
+                              setIsHistoryOpen(true)
                             }}
-                            className="text-xs"
+                            className="gap-1 shadow-2xs hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300 text-xs"
                           >
-                            Detail
+                            <HeartPulse className="size-3 text-rose-600" />
+                            <span>Riwayat KMS</span>
                           </Button>
                         </div>
                       </td>
