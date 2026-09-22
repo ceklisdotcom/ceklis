@@ -189,30 +189,30 @@ export default async function DashboardPage() {
         </div>
 
         {/* Featured App Modules Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Module 1: PAUD School */}
           <div className="p-4 sm:p-5 rounded-2xl border bg-card/80 shadow-xs flex flex-col justify-between gap-4 hover:border-indigo-500/40 transition-colors">
             <div className="flex items-start gap-3.5">
-              <div className="size-11 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-                <GraduationCap className="size-6" />
+              <div className="size-10 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                <GraduationCap className="size-5" />
               </div>
               <div>
-                <h3 className="font-bold text-base text-foreground flex items-center gap-2">
-                  <span>Modul Sekolah PAUD & Siswa</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold">
+                <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
+                  <span>Sekolah PAUD</span>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold">
                     Dapodik
                   </span>
                 </h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Kelola peserta didik PAUD, rombel (Kelompok A/B), NIK, NISN, status DDTK & PMT-AS dengan Switch Role (Kepala Sekolah, Operator, Guru).
+                  Kelola peserta didik, rombel A/B, NIK/NISN, dan status DDTK & PMT-AS.
                 </p>
               </div>
             </div>
 
             <Link href="/dashboard/school/students" className="mt-1">
-              <Button size="sm" className="gap-2 shadow-xs w-full justify-between">
-                <span>Buka Data Siswa PAUD</span>
-                <ArrowRight className="size-4" />
+              <Button size="xs" className="gap-1.5 shadow-2xs w-full justify-between">
+                <span>Kelola Siswa PAUD</span>
+                <ArrowRight className="size-3.5" />
               </Button>
             </Link>
           </div>
@@ -220,26 +220,53 @@ export default async function DashboardPage() {
           {/* Module 2: Posyandu Health Records */}
           <div className="p-4 sm:p-5 rounded-2xl border bg-card/80 shadow-xs flex flex-col justify-between gap-4 hover:border-rose-500/40 transition-colors">
             <div className="flex items-start gap-3.5">
-              <div className="size-11 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
-                <HeartHandshake className="size-6" />
+              <div className="size-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+                <HeartHandshake className="size-5" />
               </div>
               <div>
-                <h3 className="font-bold text-base text-foreground flex items-center gap-2">
-                  <span>Layanan Posyandu & KMS</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-semibold">
-                    Kesehatan
+                <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
+                  <span>Layanan Posyandu</span>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-semibold">
+                    KMS
                   </span>
                 </h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Pencatatan antropometri penimbangan balita/siswa PAUD di kelurahan, deteksi stunting dini, dan riwayat KMS terpadu.
+                  Penimbangan balita kelurahan, deteksi stunting, dan riwayat KMS terpadu.
                 </p>
               </div>
             </div>
 
             <Link href="/dashboard/posyandu/health-records" className="mt-1">
-              <Button size="sm" variant="outline" className="gap-2 shadow-xs w-full justify-between hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300">
-                <span>Buka Penimbangan Posyandu</span>
-                <ArrowRight className="size-4" />
+              <Button size="xs" variant="outline" className="gap-1.5 shadow-2xs w-full justify-between hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300">
+                <span>Penimbangan Posyandu</span>
+                <ArrowRight className="size-3.5" />
+              </Button>
+            </Link>
+          </div>
+
+          {/* Module 3: RT Verification */}
+          <div className="p-4 sm:p-5 rounded-2xl border bg-card/80 shadow-xs flex flex-col justify-between gap-4 hover:border-emerald-500/40 transition-colors">
+            <div className="flex items-start gap-3.5">
+              <div className="size-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <Home className="size-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
+                  <span>Verifikasi RT & MBR</span>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
+                    Warga
+                  </span>
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Validasi domisili warga/siswa, penetapan kategori MBR, dan status bansos.
+                </p>
+              </div>
+            </div>
+
+            <Link href="/dashboard/rt/verification" className="mt-1">
+              <Button size="xs" variant="outline" className="gap-1.5 shadow-2xs w-full justify-between hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300">
+                <span>Buka Verifikasi RT</span>
+                <ArrowRight className="size-3.5" />
               </Button>
             </Link>
           </div>

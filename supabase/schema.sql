@@ -217,3 +217,66 @@ CREATE POLICY "Authenticated users can delete posyandu_health_records"
     FOR DELETE
     TO authenticated
     USING (true);
+
+-- 5. Tabel Verifikasi Domisili & MBR Pengurus RT
+CREATE TABLE IF NOT EXISTS public.rt_verifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id VARCHAR(100),
+    nama_warga VARCHAR(150) NOT NULL,
+    nik VARCHAR(16) NOT NULL,
+    no_kk VARCHAR(16),
+    nama_kepala_keluarga VARCHAR(150) NOT NULL,
+    jenis_kelamin VARCHAR(2) DEFAULT 'L',
+    usia_tahun INT,
+    sumber_data VARCHAR(50) DEFAULT 'SEKOLAH_PAUD', -- 'SEKOLAH_PAUD', 'POSYANDU', 'MANDIRI'
+    nama_lembaga_asal VARCHAR(150),
+    rt VARCHAR(10) NOT NULL,
+    rw VARCHAR(10) NOT NULL,
+    kelurahan VARCHAR(100) NOT NULL,
+    kecamatan VARCHAR(100) NOT NULL,
+    alamat_detail TEXT,
+    status_verifikasi VARCHAR(50) DEFAULT 'PENDING', -- 'PENDING', 'VERIFIED', 'REJECTED', 'MOVED'
+    is_mbr BOOLEAN DEFAULT false,
+    kategori_mbr VARCHAR(50) DEFAULT 'NON_MBR', -- 'MBR', 'NON_MBR', 'DESIL_1_EXTREME', 'DESIL_2_SANGAT_MISKIN'
+    jenis_bansos TEXT[], -- ['PKH', 'BPNT', 'KIP', 'BLT']
+    catatan_rt TEXT,
+    verified_by VARCHAR(150),
+    verified_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- Index pencarian verifikasi RT
+CREATE INDEX IF NOT EXISTS idx_rt_verifications_rt_rw ON public.rt_verifications (kelurahan, rw, rt);
+CREATE INDEX IF NOT EXISTS idx_rt_verifications_status ON public.rt_verifications (status_verifikasi);
+CREATE INDEX IF NOT EXISTS idx_rt_verifications_nik ON public.rt_verifications (nik);
+
+-- Aktifkan RLS untuk rt_verifications
+ALTER TABLE public.rt_verifications ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Authenticated users can read rt_verifications" ON public.rt_verifications;
+CREATE POLICY "Authenticated users can read rt_verifications"
+    ON public.rt_verifications
+    FOR SELECT
+    TO authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Authenticated users can insert rt_verifications" ON public.rt_verifications;
+CREATE POLICY "Authenticated users can insert rt_verifications"
+    ON public.rt_verifications
+    FOR INSERT
+    TO authenticated
+    WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Authenticated users can update rt_verifications" ON public.rt_verifications;
+CREATE POLICY "Authenticated users can update rt_verifications"
+    ON public.rt_verifications
+    FOR UPDATE
+    TO authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Authenticated users can delete rt_verifications" ON public.rt_verifications;
+CREATE POLICY "Authenticated users can delete rt_verifications"
+    ON public.rt_verifications
+    FOR DELETE
+    TO authenticated
+    USING (true);
