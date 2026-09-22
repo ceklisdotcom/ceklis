@@ -280,3 +280,38 @@ CREATE POLICY "Authenticated users can delete rt_verifications"
     FOR DELETE
     TO authenticated
     USING (true);
+
+-- 6. SQL View: Agregasi Rekapitulasi Berjenjang Wilayah (v_rekapitulasi_wilayah)
+CREATE OR REPLACE VIEW public.v_rekapitulasi_wilayah AS
+SELECT
+    w.kecamatan,
+    w.kelurahan,
+    COUNT(DISTINCT s.id) AS total_siswa,
+    COUNT(DISTINCT CASE WHEN v.status_verifikasi = 'VERIFIED' THEN v.id END) AS total_verified_rt,
+    ROUND(
+        CASE
+            WHEN COUNT(DISTINCT s.id) > 0 THEN
+                (COUNT(DISTINCT CASE WHEN v.status_verifikasi = 'VERIFIED' THEN v.id END)::NUMERIC / COUNT(DISTINCT s.id)::NUMERIC) * 100
+            ELSE 0
+        END,
+        1
+    ) AS persentase_verified,
+    COUNT(DISTINCT CASE WHEN v.is_mbr = true THEN v.id END) AS total_mbr,
+    COUNT(DISTINCT CASE WHEN h.status_gizi = 'Stunting' THEN h.id END) AS total_stunting,
+    COUNT(DISTINCT CASE WHEN h.status_gizi IN ('Wasting', 'Gizi Kurang') THEN h.id END) AS total_gizi_kurang,
+    COUNT(DISTINCT CASE WHEN s.status_pmtas = true THEN s.id END) AS total_pmtas,
+    COUNT(DISTINCT CASE WHEN s.status_ddtk = true THEN s.id END) AS total_ddtk_selesai,
+    ROUND(
+        CASE
+            WHEN COUNT(DISTINCT s.id) > 0 THEN
+                (COUNT(DISTINCT CASE WHEN s.status_ddtk = true THEN s.id END)::NUMERIC / COUNT(DISTINCT s.id)::NUMERIC) * 100
+            ELSE 0
+        END,
+        1
+    ) AS persentase_ddtk
+FROM public.wilayah_tegal w
+LEFT JOIN public.paud_students s ON LOWER(s.kelurahan) = LOWER(w.kelurahan)
+LEFT JOIN public.rt_verifications v ON LOWER(v.kelurahan) = LOWER(w.kelurahan)
+LEFT JOIN public.posyandu_health_records h ON LOWER(h.kelurahan) = LOWER(w.kelurahan)
+GROUP BY w.kecamatan, w.kelurahan
+ORDER BY w.kecamatan ASC, w.kelurahan ASC;

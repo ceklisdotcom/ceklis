@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   ArrowRight,
+  BarChart3,
   Building2,
   Calendar,
   CheckCircle2,
@@ -140,6 +141,13 @@ export default async function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Link href="/dashboard/rekapitulasi">
+              <Button variant="ghost" size="sm" className="gap-1.5 text-xs font-semibold">
+                <BarChart3 className="size-4 text-primary" />
+                <span className="hidden sm:inline">Rekapitulasi Wilayah</span>
+              </Button>
+            </Link>
+
             <div className="hidden md:flex items-center gap-2 text-xs bg-muted px-3 py-1.5 rounded-lg border">
               <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-muted-foreground">{user.email}</span>
