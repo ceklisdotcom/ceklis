@@ -7,6 +7,8 @@ import { createPaudStudentAction } from "@/app/dashboard/school/actions"
 import { type PaudStudent } from "@/app/dashboard/school/types"
 import { INITIAL_HEALTH_RECORDS } from "@/app/dashboard/posyandu/types"
 import { StudentHealthHistory } from "@/components/student-health-history"
+import { DapodikImportModal } from "@/components/dapodik-import-modal"
+import { exportDapodikExcel } from "@/lib/excel/dapodik-excel"
 import { type WilayahTegalItem } from "@/lib/constants/wilayah"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -20,6 +22,8 @@ import {
   Building,
   CheckCircle2,
   ChevronDown,
+  Download,
+  FileSpreadsheet,
   Filter,
   GraduationCap,
   HeartHandshake,
@@ -34,6 +38,7 @@ import {
   Search,
   ShieldCheck,
   Sparkles,
+  Upload,
   UserCheck,
   UserPlus,
   Users,
@@ -58,6 +63,9 @@ export function StudentsClient({
   const [students, setStudents] = useState<PaudStudent[]>(initialStudents)
   const [activeRole, setActiveRole] = useState<SchoolRole>("Kepala Sekolah")
   const [showAddForm, setShowAddForm] = useState<boolean>(false)
+
+  // Dapodik Import Modal
+  const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false)
 
   // Health History Modal
   const [selectedStudentForHistory, setSelectedStudentForHistory] = useState<PaudStudent | null>(null)
@@ -180,6 +188,15 @@ export function StudentsClient({
         healthRecords={INITIAL_HEALTH_RECORDS}
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
+      />
+
+      {/* Dapodik Import Excel Modal */}
+      <DapodikImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImportSuccess={(importedStudents, _count) => {
+          setStudents((prev) => [...importedStudents, ...prev])
+        }}
       />
 
       {/* Top Header with Breadcrumbs & Role Switcher */}
@@ -359,7 +376,41 @@ export function StudentsClient({
           </select>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Export Excel Button */}
+          <Button
+            variant="outline"
+            onClick={() =>
+              exportDapodikExcel(
+                filteredStudents.length > 0 ? filteredStudents : students
+              )
+            }
+            className="gap-1.5 text-xs shadow-2xs hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 dark:hover:bg-emerald-950/40"
+            title="Ekspor seluruh data siswa ke format Excel Dapodik (.xlsx)"
+          >
+            <Download className="size-3.5 text-emerald-600" />
+            <span>Ekspor Excel</span>
+          </Button>
+
+          {/* Import Excel Dapodik Button */}
+          <Button
+            variant="outline"
+            onClick={() => setIsImportModalOpen(true)}
+            className={`gap-1.5 text-xs shadow-2xs transition-all ${
+              activeRole === "Operator PAUD"
+                ? "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-700 font-semibold ring-2 ring-emerald-500/20"
+                : "hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 dark:hover:bg-emerald-950/40"
+            }`}
+            title="Unggah file Excel unduhan Dapodik untuk impor otomatis"
+          >
+            <FileSpreadsheet className="size-3.5 text-emerald-600" />
+            <span>Import Excel Dapodik</span>
+            {activeRole === "Operator PAUD" && (
+              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+            )}
+          </Button>
+
+          {/* Add Student Form Toggle */}
           <Button
             onClick={() => setShowAddForm(!showAddForm)}
             className="gap-2 shadow-xs font-semibold"
@@ -751,23 +802,41 @@ export function StudentsClient({
                     <td colSpan={8} className="py-12 text-center">
                       <div className="flex flex-col items-center justify-center gap-2 max-w-sm mx-auto text-muted-foreground">
                         <Search className="size-8 opacity-40" />
-                        <p className="font-semibold text-foreground text-sm">Tidak ada siswa ditemukan</p>
-                        <p className="text-xs">
-                          Coba ubah kata kunci pencarian atau filter rombel/status yang dipilih.
+                        <p className="font-semibold text-foreground text-sm">
+                          {students.length === 0
+                            ? "Belum ada data peserta didik"
+                            : "Tidak ada siswa ditemukan"}
                         </p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSearchQuery("")
-                            setFilterRombel("ALL")
-                            setFilterDdtk("ALL")
-                            setFilterPmtas("ALL")
-                          }}
-                          className="mt-2"
-                        >
-                          Reset Filter
-                        </Button>
+                        <p className="text-xs">
+                          {students.length === 0
+                            ? "Mulai dengan mengimpor file Excel dari Dapodik atau tambah data secara manual."
+                            : "Coba ubah kata kunci pencarian atau filter rombel/status yang dipilih."}
+                        </p>
+                        <div className="flex items-center gap-2 mt-2">
+                          {students.length === 0 ? (
+                            <Button
+                              size="sm"
+                              onClick={() => setIsImportModalOpen(true)}
+                              className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+                            >
+                              <FileSpreadsheet className="size-4" />
+                              <span>Import Excel Dapodik</span>
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSearchQuery("")
+                                setFilterRombel("ALL")
+                                setFilterDdtk("ALL")
+                                setFilterPmtas("ALL")
+                              }}
+                            >
+                              Reset Filter
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </td>
                   </tr>
