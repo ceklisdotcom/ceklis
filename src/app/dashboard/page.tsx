@@ -5,6 +5,7 @@ import { signOutAction } from "@/app/auth/actions"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
+  ArrowRight,
   Building2,
   Calendar,
   CheckCircle2,
@@ -105,9 +106,9 @@ export default async function DashboardPage() {
         ]
       case "SEKOLAH":
         return [
-          { title: "Presensi & Kehadiran Kelas", status: "Aktif", date: "Hari Ini" },
-          { title: "Evaluasi Tengah Semester", status: "Terjadwal", date: "Bulan Depan" },
-          { title: "Rapat Koordinasi Guru & Wali Murid", status: "Selesai", date: "Minggu Lalu" },
+          { title: "Presensi & Kehadiran Kelas PAUD", status: "Aktif", date: "Hari Ini" },
+          { title: "Deteksi Dini Tumbuh Kembang (DDTK)", status: "Terjadwal", date: "Bulan Ini" },
+          { title: "Distribusi PMT-AS (Makanan Tambahan)", status: "Selesai", date: "Minggu Lalu" },
         ]
       case "RT":
       default:
@@ -185,6 +186,33 @@ export default async function DashboardPage() {
               </span>
             </div>
           </div>
+        </div>
+
+        {/* Featured App Modules Banner */}
+        <div className="p-4 sm:p-5 rounded-2xl border bg-card/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="size-11 rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+              <GraduationCap className="size-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-foreground flex items-center gap-2">
+                <span>Modul Sekolah PAUD & Siswa (Dapodik)</span>
+                <span className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold">
+                  Baru
+                </span>
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Kelola data peserta didik PAUD, rombel (Kelompok A/B), NIK, NISN, status DDTK & PMT-AS dengan fitur Switch Role (Kepala Sekolah, Operator, Guru).
+              </p>
+            </div>
+          </div>
+
+          <Link href="/dashboard/school/students" className="shrink-0">
+            <Button className="gap-2 shadow-xs w-full sm:w-auto">
+              <span>Buka Data Siswa PAUD</span>
+              <ArrowRight className="size-4" />
+            </Button>
+          </Link>
         </div>
 
         {/* 3-Column Info Cards */}

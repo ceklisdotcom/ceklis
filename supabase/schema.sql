@@ -99,3 +99,62 @@ CREATE POLICY "Users can update their own profile"
     ON public.profiles
     FOR UPDATE
     USING (auth.uid() = id);
+
+-- 3. Tabel Peserta Didik PAUD-PNF (Dapodik, DDTK, PMT-AS)
+CREATE TABLE IF NOT EXISTS public.paud_students (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    npsn VARCHAR(20) NOT NULL,
+    nama_sekolah VARCHAR(150) NOT NULL,
+    nisn VARCHAR(10) NOT NULL,
+    nik VARCHAR(16) NOT NULL,
+    nama_lengkap VARCHAR(150) NOT NULL,
+    nama_ibu_kandung VARCHAR(150) NOT NULL,
+    rombel VARCHAR(50) NOT NULL, -- 'Kelompok A', 'Kelompok B', 'KB', 'TPA', 'SPS'
+    jenis_kelamin VARCHAR(2) DEFAULT 'L', -- 'L' / 'P'
+    tanggal_lahir DATE,
+    rt VARCHAR(10) NOT NULL,
+    rw VARCHAR(10) NOT NULL,
+    kelurahan VARCHAR(100) NOT NULL,
+    kecamatan VARCHAR(100) NOT NULL,
+    status_ddtk BOOLEAN DEFAULT true,
+    status_pmtas BOOLEAN DEFAULT true,
+    catatan_kesehatan TEXT,
+    created_at TIMESTAMPTZ DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- Index pencarian siswa Dapodik
+CREATE INDEX IF NOT EXISTS idx_paud_students_npsn ON public.paud_students (npsn);
+CREATE INDEX IF NOT EXISTS idx_paud_students_nisn ON public.paud_students (nisn);
+CREATE INDEX IF NOT EXISTS idx_paud_students_nik ON public.paud_students (nik);
+
+-- Aktifkan RLS untuk paud_students
+ALTER TABLE public.paud_students ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Authenticated users can read paud_students" ON public.paud_students;
+CREATE POLICY "Authenticated users can read paud_students"
+    ON public.paud_students
+    FOR SELECT
+    TO authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Authenticated users can insert paud_students" ON public.paud_students;
+CREATE POLICY "Authenticated users can insert paud_students"
+    ON public.paud_students
+    FOR INSERT
+    TO authenticated
+    WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Authenticated users can update paud_students" ON public.paud_students;
+CREATE POLICY "Authenticated users can update paud_students"
+    ON public.paud_students
+    FOR UPDATE
+    TO authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Authenticated users can delete paud_students" ON public.paud_students;
+CREATE POLICY "Authenticated users can delete paud_students"
+    ON public.paud_students
+    FOR DELETE
+    TO authenticated
+    USING (true);
